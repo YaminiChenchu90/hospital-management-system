@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Appointments - MediCare HMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style th:replace="~{fragments/layout :: styles}"></style>
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/layout :: sidebar('appointments')}"></div>
+    <main class="main-content">
+        <div class="page-actions">
+            <h2>Appointments</h2>
+            <a th:if="${canBook}" th:href="@{/appointments/add}" class="btn btn-primary">+ Book Appointment</a>
+        </div>
+        <div class="card table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Notes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="appt : ${appointments}">
+                        <td th:text="${appt.patient.fullName}"></td>
+                        <td th:text="${appt.doctor.fullName}"></td>
+                        <td th:text="${appt.appointmentDate}"></td>
+                        <td th:text="${appt.appointmentTime}"></td>
+                        <td>
+                            <span class="badge"
+                                  th:classappend="${appt.status.name() == 'SCHEDULED'} ? 'badge-scheduled' : (${appt.status.name() == 'CONFIRMED'} ? 'badge-confirmed' : (${appt.status.name() == 'COMPLETED'} ? 'badge-completed' : 'badge-cancelled'))"
+                                  th:text="${appt.status}"></span>
+                        </td>
+                        <td th:text="${appt.notes}"></td>
+                        <td style="white-space: nowrap;">
+                            <a th:if="${appt.status.name() == 'SCHEDULED' or appt.status.name() == 'CONFIRMED'}"
+                               th:href="@{/video-consultation/{id}(id=${appt.id})}"
+                               class="btn btn-video btn-sm">Video</a>
+                            <a th:if="${canManageStatus and (appt.status.name() == 'SCHEDULED')}" th:href="@{/appointments/{id}/status(id=${appt.id}, status='CONFIRMED')}" class="btn btn-primary btn-sm">Confirm</a>
+                            <a th:if="${canManageStatus and appt.status.name() != 'COMPLETED' and appt.status.name() != 'CANCELLED'}" th:href="@{/appointments/{id}/status(id=${appt.id}, status='COMPLETED')}" class="btn btn-secondary btn-sm">Complete</a>
+                            <a th:if="${canManageStatus and appt.status.name() != 'CANCELLED'}" th:href="@{/appointments/{id}/status(id=${appt.id}, status='CANCELLED')}" class="btn btn-danger btn-sm">Cancel</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(appointments)}">
+                        <td colspan="7" style="text-align:center; color:#64748b;">No appointments found</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Appointment - MediCare HMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style th:replace="~{fragments/layout :: styles}"></style>
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/layout :: sidebar('appointments')}"></div>
+    <main class="main-content">
+        <h2 style="margin-bottom: 24px;">Book Appointment</h2>
+        <div class="card" style="max-width: 600px;">
+            <form method="post" th:action="@{/appointments/add}">
+                <div class="form-group">
+                    <label>Patient</label>
+                    <input th:if="${isPatient}" type="text"
+                           th:value="${patient != null ? patient.fullName + ' (' + patient.email + ')' : userName}"
+                           readonly>
+                    <select th:unless="${isPatient}" name="patientId" required>
+                        <option th:each="p : ${patients}" th:value="${p.id}" th:text="${p.fullName + ' (' + p.email + ')'}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Doctor</label>
+                    <select name="doctorId" required>
+                        <option th:each="d : ${doctors}" th:value="${d.id}"
+                                th:text="${d.fullName + ' - ' + d.specialization + ' | ' + (d.consultationHours ?: 'Mon-Fri, 9:00 AM - 5:00 PM')}"></option>
+                    </select>
+                </div>
+                <div style="background:#eff6ff; border-left:4px solid #93c5fd; border-radius:8px; margin-bottom:20px; padding:16px;">
+                    <strong style="color:#1e40af;">Video consultation</strong>
+                    <p style="color:#475569; font-size:14px; margin-top:6px; line-height:1.5;">
+                        After booking, open Video Consultations from the dashboard to join the online call for scheduled or confirmed appointments.
+                    </p>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" name="appointmentDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Time</label>
+                    <input type="time" name="appointmentTime" required>
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea name="notes" rows="3" placeholder="Reason for visit..."></textarea>
+                </div>
+                <div style="display:flex; gap:12px;">
+                    <button type="submit" class="btn btn-primary">Book Appointment</button>
+                    <a th:href="@{/appointments}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>
