@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Departments - MediCare HMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style th:replace="~{fragments/layout :: styles}"></style>
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/layout :: sidebar('departments')}"></div>
+    <main class="main-content">
+        <div class="page-actions">
+            <h2>Departments</h2>
+            <a th:href="@{/departments/add}" class="btn btn-primary">+ Add Department</a>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+            <div class="card" th:each="dept : ${departments}">
+                <h3 style="color: #134e4a; margin-bottom: 8px;" th:text="${dept.name}"></h3>
+                <p style="color: #64748b; font-size: 14px; margin-bottom: 12px;" th:text="${dept.description}"></p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 13px; color: #0d9488; font-weight: 600;" th:text="'📍 ' + ${dept.floor}"></span>
+                    <a th:href="@{/departments/{id}/delete(id=${dept.id})}" class="btn btn-danger btn-sm"
+                       onclick="return confirm('Delete this department?')">Delete</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

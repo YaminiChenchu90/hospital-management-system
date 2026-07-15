@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Lab Specialists - MediCare HMS')}">
+    <style th:replace="~{fragments/layout :: styles}"></style>
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/layout :: sidebar('dashboard')}"></div>
+    <main class="main-content">
+        <div class="top-bar">
+            <h2 th:text="${selectedField != null and !#strings.isEmpty(selectedField) ? 'Lab Specialists - ' + selectedField : 'Lab Specialists'}">Lab Specialists</h2>
+            <div class="user-badge">
+                <div>
+                    <div th:text="${userName}">User</div>
+                    <div class="role" th:text="${userRole}">Role</div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${message}"
+             th:class="${messageType == 'success' ? 'alert alert-success' : 'alert alert-error'}"
+             th:text="${message}"></div>
+
+        <div class="card">
+            <div class="page-actions">
+                <h3 style="color:#134e4a;">Lab Specialist Accounts</h3>
+                <a th:href="@{/dashboard}" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+                <div th:each="entry : ${labSpecialistFieldStats}" style="min-width:220px; padding:16px 20px; border-radius:12px; background:#ecfeff; border:1px solid #99f6e4; display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <div style="font-weight:700; color:#0f766e;" th:text="${entry.key}">Field</div>
+                        <div style="font-size:14px; color:#166534;" th:text="${entry.value} + ' Specialist'">1 Specialist</div>
+                    </div>
+                    <a th:href="@{/lab-specialists(field=${entry.key})}" class="btn btn-secondary btn-sm">View</a>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <div th:if="${#lists.isEmpty(labSpecialists)}" style="text-align:center; color:#64748b; padding:16px 0;">No lab specialists found</div>
+                <div th:each="specialist : ${labSpecialists}" style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
+                    <div style="flex:1; min-width:240px; padding:14px 16px; border:1px solid #d1fae5; border-radius:10px; background:#f8fffe;">
+                        <div style="font-weight:700; color:#134e4a;" th:text="${specialist.fullName}">Name</div>
+                        <div style="font-size:13px; color:#64748b; margin-top:4px;" th:text="${specialist.labField ?: 'Unassigned'}">Field</div>
+                        <div style="font-size:13px; color:#64748b; margin-top:2px;" th:text="${specialist.specialistTitle ?: 'Lab Specialist'}">Specialist</div>
+                    </div>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <a th:href="@{/lab-specialists/view/{id}(id=${specialist.id})}" class="btn btn-secondary btn-sm">Details</a>
+                        <form th:if="${specialist.labField == null or #strings.isEmpty(specialist.labField)}"
+                              th:action="@{/lab-specialists/delete/{id}(id=${specialist.id})}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Delete this unassigned lab specialist?')">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

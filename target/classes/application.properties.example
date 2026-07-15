@@ -1,0 +1,26 @@
+# Example application properties - do NOT commit secrets here
+spring.application.name=Hospital_management_system
+spring.datasource.url=jdbc:mysql://localhost:3306/hospital_db?createDatabaseIfNotExist=true
+spring.datasource.username=root
+# Set DB_PASSWORD in environment or external config
+spring.datasource.password=
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=false
+spring.jpa.properties.hibernate.format_sql=true
+
+spring.thymeleaf.cache=false
+spring.thymeleaf.prefix=classpath:/templates/
+spring.thymeleaf.suffix=.html
+
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+# Set MAIL_USERNAME and MAIL_PASSWORD in environment or external config
+spring.mail.username=yourname@gmail.com
+spring.mail.password=your_app_password
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+spring.mail.properties.mail.smtp.starttls.required=true
+
+server.port=8082

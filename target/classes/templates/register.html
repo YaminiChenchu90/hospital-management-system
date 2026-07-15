@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - MediCare HMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f766e 0%, #0891b2 100%);
+            padding: 24px;
+        }
+        .register-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 480px;
+            padding: 40px;
+        }
+        .register-container h1 { text-align: center; color: #134e4a; font-size: 28px; margin-bottom: 8px; }
+        .register-container .subtitle { text-align: center; color: #64748b; margin-bottom: 32px; font-size: 14px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; color: #334155; font-size: 14px; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 12px 16px; border: 2px solid #ccfbf1;
+            border-radius: 8px; font-size: 14px;
+        }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #0d9488; }
+        .role-help { color: #64748b; font-size: 12px; margin-top: 6px; line-height: 1.4; }
+        .btn-register {
+            width: 100%; padding: 14px; margin-top: 8px;
+            background: linear-gradient(135deg, #14b8a6, #0d9488);
+            color: white; border: none; border-radius: 10px;
+            font-size: 16px; font-weight: 600; cursor: pointer;
+        }
+        .btn-register:hover { box-shadow: 0 8px 20px rgba(13,148,136,0.4); }
+        .error-message { background: #fee2e2; color: #b91c1c; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; }
+        .login-link { text-align: center; margin-top: 20px; color: #64748b; font-size: 14px; }
+        .login-link a { color: #0d9488; font-weight: 600; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h1>Hospital Account Registration</h1>
+        <p class="subtitle">Create your hospital account</p>
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
+        <form method="post" th:action="@{/register}">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required placeholder="yourname@gmail.com">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required minlength="4" placeholder="Create your password">
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required minlength="4" placeholder="Re-enter your password">
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="text" id="phone" name="phone" placeholder="Phone number">
+            </div>
+            <div class="form-group">
+                <label for="role">Role</label>
+                <select id="role" name="role" required>
+                    <option value="ROLE_PATIENT" selected>Patient</option>
+                    <option value="ROLE_DOCTOR">Doctor</option>
+                    <option value="ROLE_LAB_SPECIALIST">Lab Specialist</option>
+                    <option value="ROLE_ADMIN">Admin</option>
+                </select>
+                <div class="role-help">Choose whether this account is for an admin, doctor, lab specialist, or patient.</div>
+            </div>
+            <div class="form-group" id="specializationGroup" style="display:none;">
+                <label for="specialization">Doctor Specialization</label>
+                <input type="text" id="specialization" name="specialization" placeholder="e.g. Cardiologist">
+            </div>
+            <div class="form-group doctor-field" id="departmentGroup" style="display:none;">
+                <label for="departmentId">Department</label>
+                <select id="departmentId" name="departmentId">
+                    <option value="">Select department</option>
+                    <option th:each="dept : ${departments}"
+                            th:value="${dept.id}"
+                            th:text="${dept.name}"
+                            th:attr="data-floor=${dept.floor}"></option>
+                </select>
+            </div>
+            <div class="form-group doctor-field" id="floorGroup" style="display:none;">
+                <label for="departmentFloor">Floor</label>
+                <input type="text" id="departmentFloor" readonly placeholder="Select a department to view floor">
+            </div>
+            <div class="form-group lab-field" id="labFieldGroup" style="display:none;">
+                <label for="labField">Lab Field</label>
+                <select id="labField" name="labField">
+                    <option value="">Select lab field</option>
+                    <option value="Hematology">Hematology</option>
+                    <option value="Biochemistry">Biochemistry</option>
+                    <option value="Microbiology">Microbiology</option>
+                    <option value="Pathology">Pathology</option>
+                    <option value="Radiology">Radiology</option>
+                    <option value="Immunology">Immunology</option>
+                </select>
+            </div>
+            <div class="form-group lab-field" id="specialistTitleGroup" style="display:none;">
+                <label for="specialistTitle">Specialist Title</label>
+                <input type="text" id="specialistTitle" name="specialistTitle" placeholder="e.g. Hematology Specialist">
+            </div>
+            <button type="submit" class="btn-register">Create Account</button>
+        </form>
+        <div class="login-link">
+            Already have an account? <a th:href="@{/login}">Sign in</a>
+        </div>
+    </div>
+    <script>
+        const roleSelect = document.getElementById('role');
+        const specializationGroup = document.getElementById('specializationGroup');
+        const specializationInput = document.getElementById('specialization');
+        const departmentGroup = document.getElementById('departmentGroup');
+        const departmentSelect = document.getElementById('departmentId');
+        const floorGroup = document.getElementById('floorGroup');
+        const floorInput = document.getElementById('departmentFloor');
+        const labFieldGroup = document.getElementById('labFieldGroup');
+        const labFieldSelect = document.getElementById('labField');
+        const specialistTitleGroup = document.getElementById('specialistTitleGroup');
+        const specialistTitleInput = document.getElementById('specialistTitle');
+
+        function updateRoleFields() {
+            const isDoctor = roleSelect.value === 'ROLE_DOCTOR';
+            const isLabSpecialist = roleSelect.value === 'ROLE_LAB_SPECIALIST';
+            specializationGroup.style.display = isDoctor ? 'block' : 'none';
+            departmentGroup.style.display = isDoctor ? 'block' : 'none';
+            floorGroup.style.display = isDoctor ? 'block' : 'none';
+            labFieldGroup.style.display = isLabSpecialist ? 'block' : 'none';
+            specialistTitleGroup.style.display = isLabSpecialist ? 'block' : 'none';
+            specializationInput.required = isDoctor;
+            departmentSelect.required = isDoctor;
+            labFieldSelect.required = isLabSpecialist;
+            specialistTitleInput.required = isLabSpecialist;
+            if (!isDoctor) {
+                departmentSelect.value = '';
+                floorInput.value = '';
+            } else {
+                updateDepartmentFloor();
+            }
+            if (!isLabSpecialist) {
+                labFieldSelect.value = '';
+                specialistTitleInput.value = '';
+            }
+        }
+
+        function updateDepartmentFloor() {
+            const selectedOption = departmentSelect.options[departmentSelect.selectedIndex];
+            floorInput.value = selectedOption && selectedOption.dataset.floor ? selectedOption.dataset.floor : '';
+        }
+
+        roleSelect.addEventListener('change', updateRoleFields);
+        departmentSelect.addEventListener('change', updateDepartmentFloor);
+        updateRoleFields();
+    </script>
+</body>
+</html>

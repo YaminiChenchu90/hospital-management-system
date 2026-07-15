@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Video Consultations - MediCare HMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style th:replace="~{fragments/layout :: styles}"></style>
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/layout :: sidebar('video-consultations')}"></div>
+    <main class="main-content">
+        <div class="page-actions">
+            <h2>Video Consultations</h2>
+            <a th:href="@{/appointments}" class="btn btn-secondary">View All Appointments</a>
+        </div>
+
+        <div class="card" style="margin-bottom: 24px; background: #eff6ff; border-left: 4px solid #93c5fd;">
+            <p style="color: #475569; font-size: 14px; line-height: 1.6;">
+                Join a secure video call with your doctor or patient using Jitsi Meet.
+                Only <strong>Scheduled</strong> and <strong>Confirmed</strong> appointments appear here.
+                Allow camera and microphone access when prompted by your browser.
+            </p>
+        </div>
+
+        <div class="card table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="appt : ${appointments}">
+                        <td th:text="${appt.patient.fullName}"></td>
+                        <td th:text="${appt.doctor.fullName}"></td>
+                        <td th:text="${appt.appointmentDate}"></td>
+                        <td th:text="${appt.appointmentTime}"></td>
+                        <td>
+                            <span class="badge"
+                                  th:classappend="${appt.status.name() == 'SCHEDULED'} ? 'badge-scheduled' : 'badge-confirmed'"
+                                  th:text="${appt.status}"></span>
+                        </td>
+                        <td>
+                            <a th:href="@{/video-consultation/{id}(id=${appt.id})}" class="btn btn-video btn-sm">
+                                Join Video Call
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(appointments)}">
+                        <td colspan="6" style="text-align:center; color:#64748b;">
+                            No upcoming video consultations. Book or confirm an appointment first.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

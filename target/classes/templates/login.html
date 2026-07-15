@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MediCare HMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            background: linear-gradient(135deg, #0f766e 0%, #0891b2 50%, #134e4a 100%);
+        }
+        .login-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px;
+            color: white;
+        }
+        .login-left h1 { font-size: 48px; font-weight: 700; margin-bottom: 16px; }
+        .login-left p { font-size: 18px; opacity: 0.9; line-height: 1.6; max-width: 400px; }
+        .features { margin-top: 40px; display: flex; flex-direction: column; gap: 16px; }
+        .feature { display: flex; align-items: center; gap: 12px; font-size: 15px; }
+        .feature span { background: rgba(255,255,255,0.2); width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        .login-right {
+            width: 480px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px;
+            border-radius: 24px 0 0 24px;
+            box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+        }
+        .login-form { width: 100%; max-width: 360px; }
+        .login-form h2 { font-size: 28px; color: #134e4a; margin-bottom: 8px; }
+        .login-form .subtitle { color: #64748b; margin-bottom: 32px; font-size: 14px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #334155; font-size: 14px; }
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #ccfbf1;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus { outline: none; border-color: #0d9488; }
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #14b8a6, #0d9488);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(13,148,136,0.4); }
+        .error-message {
+            background: #fee2e2; color: #b91c1c; padding: 12px 16px;
+            border-radius: 8px; margin-bottom: 20px; font-size: 14px;
+        }
+        .success-message {
+            background: #d1fae5; color: #065f46; padding: 12px 16px;
+            border-radius: 8px; margin-bottom: 20px; font-size: 14px;
+        }
+        .register-link { text-align: center; margin-top: 24px; color: #64748b; font-size: 14px; }
+        .register-link a { color: #0d9488; font-weight: 600; text-decoration: none; }
+        .demo-credentials {
+            margin-top: 24px; padding: 16px; background: #f0fdfa; border-radius: 10px;
+            font-size: 12px; color: #475569; line-height: 1.8;
+        }
+        .demo-credentials strong { color: #134e4a; }
+        @media (max-width: 900px) {
+            body { flex-direction: column; }
+            .login-left { padding: 40px 24px; }
+            .login-left h1 { font-size: 32px; }
+            .login-right { width: 100%; border-radius: 24px 24px 0 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-left">
+        <h1>🏥 MediCare HMS</h1>
+        <p>Complete hospital management solution for patients, doctors, appointments, and departments.</p>
+        <div class="features">
+            <div class="feature"><span>👥</span> Patient Management</div>
+            <div class="feature"><span>👨‍⚕️</span> Doctor Scheduling</div>
+            <div class="feature"><span>📅</span> Appointment Booking</div>
+            <div class="feature"><span>🏢</span> Department Overview</div>
+        </div>
+    </div>
+    <div class="login-right">
+        <div class="login-form">
+            <h2>Welcome Back</h2>
+            <p class="subtitle">Sign in to your account</p>
+            <div th:if="${error}" class="error-message" th:text="${error}"></div>
+            <div th:if="${success}" class="success-message" th:text="${success}"></div>
+            <form method="post" th:action="@{/login}">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="yourname@gmail.com">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter password">
+                </div>
+                <div style="text-align:right; margin-top:-10px; margin-bottom:18px;">
+                    <a th:href="@{/forgot-password}" style="color:#0d9488; font-size:14px; font-weight:600; text-decoration:none;">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn-login">Sign In</button>
+            </form>
+            <div class="register-link">
+                New patient? <a th:href="@{/register}">Create account</a>
+            </div>
+            <div class="demo-credentials">
+                <strong>Demo Login (Gmail):</strong><br>
+                Admin: admin@gmail.com / admin123<br>
+                Doctor: dr.smith@gmail.com / doctor123<br>
+                Patient: patient@gmail.com / patient123
+            </div>
+        </div>
+    </div>
+</body>
+</html>

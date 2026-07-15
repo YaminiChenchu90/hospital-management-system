@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctors - MediCare HMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style th:replace="~{fragments/layout :: styles}"></style>
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/layout :: sidebar('doctors')}"></div>
+    <main class="main-content">
+        <div class="page-actions">
+            <h2>Doctors</h2>
+            <a th:href="@{/doctors/add}" class="btn btn-primary">+ Add Doctor</a>
+        </div>
+        <form class="search-bar" method="get" th:action="@{/doctors/search}">
+            <input type="text" name="query" placeholder="Search by name or specialization..." th:value="${query}">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <div class="card table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Specialization</th>
+                        <th>Department</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Timing</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="doctor : ${doctors}">
+                        <td th:text="${doctor.fullName}"></td>
+                        <td th:text="${doctor.specialization}"></td>
+                        <td th:text="${doctor.department?.name ?: 'N/A'}"></td>
+                        <td th:text="${doctor.email}"></td>
+                        <td th:text="${doctor.phone}"></td>
+                        <td th:text="${doctor.consultationHours ?: 'Mon-Fri, 9:00 AM - 5:00 PM'}"></td>
+                        <td>
+                            <span class="badge" th:classappend="${doctor.available} ? 'badge-confirmed' : 'badge-cancelled'"
+                                  th:text="${doctor.available} ? 'Available' : 'Unavailable'"></span>
+                        </td>
+                        <td>
+                            <a th:href="@{/doctors/{id}/edit(id=${doctor.id})}" class="btn btn-primary btn-sm">Edit</a>
+                            <a th:href="@{/doctors/{id}/delete(id=${doctor.id})}" class="btn btn-danger btn-sm"
+                               onclick="return confirm('Delete this doctor?')">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>
