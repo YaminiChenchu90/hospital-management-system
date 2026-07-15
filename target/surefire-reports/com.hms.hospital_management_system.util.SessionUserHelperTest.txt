@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.hms.hospital_management_system.util.SessionUserHelperTest
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.046 s -- in com.hms.hospital_management_system.util.SessionUserHelperTest
